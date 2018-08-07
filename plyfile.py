@@ -118,16 +118,19 @@ class _PlyHeaderParser(object):
             self._error("early end-of-file")
 
         line = raw_line.decode('ascii').strip()
-        try:
-            keyword = line.split(None, 1)[0]
-        except IndexError:
-            self._error()
 
-        if keyword not in self._allowed:
-            self._error("expected one of {%s}" %
-                        ", ".join(self._allowed))
+        if line != "":
+            try:
+                keyword = line.split(None, 1)[0]
+            except IndexError:
+                self._error()
 
-        getattr(self, 'parse_' + keyword)(line[len(keyword)+1:])
+            if keyword not in self._allowed:
+                self._error("expected one of {%s}" %
+                            ", ".join(self._allowed))
+
+            getattr(self, 'parse_' + keyword)(line[len(keyword)+1:])
+
         return self._allowed
 
     def _error(self, message="parse error"):
